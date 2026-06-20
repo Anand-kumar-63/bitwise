@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Star } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
+import OffersBanner from "@/components/OffersBanner";
 import { queryProducts } from "@/lib/products";
 import { Product } from "@/types";
 
@@ -172,6 +173,8 @@ export default async function HomePage() {
           ))}
         </div>
       </div>
+
+      <OffersBanner />
 
       {/* ── CATEGORIES ── */}
       <section className="bg-[#0d0a07] py-24 px-6">

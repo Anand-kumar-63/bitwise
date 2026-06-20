@@ -11,6 +11,8 @@
  *   NEXTAUTH_SECRET              — Random string for NextAuth (future use)
  *   NEXTAUTH_URL                   — e.g. https://your-app.vercel.app
  *   NEXT_PUBLIC_BASE_URL           — Public site URL (auto-detects VERCEL_URL if omitted)
+ *   ADMIN_PASSWORD                 — Admin panel login password (default: admin123 for demo)
+ *   ADMIN_SESSION_SECRET           — Signs admin session cookies (falls back to NEXTAUTH_SECRET)
  */
 
 export const env = {
@@ -34,6 +36,13 @@ export const env = {
 
   // process.env.NEXT_PUBLIC_BASE_URL
   publicBaseUrl: process.env.NEXT_PUBLIC_BASE_URL ?? "",
+
+  // process.env.ADMIN_PASSWORD
+  adminPassword: process.env.ADMIN_PASSWORD ?? "admin123",
+
+  // process.env.ADMIN_SESSION_SECRET
+  adminSessionSecret:
+    process.env.ADMIN_SESSION_SECRET ?? process.env.NEXTAUTH_SECRET ?? "demo-admin-secret",
 } as const;
 
 export function isDbConfigured(): boolean {

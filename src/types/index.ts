@@ -95,3 +95,57 @@ export interface CheckoutFormData {
   pincode: string;
   country: string;
 }
+
+// ─── Offer ───────────────────────────────────────────────────────────────────
+export type OfferScope = "sitewide" | "category" | "product";
+
+export interface Offer {
+  _id: string;
+  title: string;
+  description: string;
+  bannerText: string;
+  code?: string;
+  discountPercent: number;
+  scope: OfferScope;
+  category?: Product["category"];
+  productIds?: string[];
+  isActive: boolean;
+  startsAt?: string;
+  endsAt?: string;
+  createdAt?: string;
+}
+
+export interface ProductInput {
+  name: string;
+  slug?: string;
+  category: Product["category"];
+  description: string;
+  price: number;
+  originalPrice?: number;
+  images: string[];
+  sizes: string[];
+  colors: Color[];
+  fabric: string;
+  occasion: string[];
+  tags: string[];
+  rating: number;
+  reviewCount: number;
+  stock: number;
+  isBestseller?: boolean;
+  isNew?: boolean;
+  isBridal?: boolean;
+}
+
+export interface OfferInput {
+  title: string;
+  description: string;
+  bannerText: string;
+  code?: string;
+  discountPercent: number;
+  scope: OfferScope;
+  category?: Product["category"];
+  productIds?: string[];
+  isActive: boolean;
+  startsAt?: string;
+  endsAt?: string;
+}
