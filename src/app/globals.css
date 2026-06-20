@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+/* ── Design Tokens ── */
+:root {
+  --bg: #0a0806;
+  --bg2: #110e0a;
+  --bg3: #1a1410;
+  --gold: #c9a84c;
+  --gold-light: #e8c96a;
+  --gold-dim: #8a6f30;
+  --cream: #f0e8dc;
+  --cream-dim: #b8a898;
+  --burgundy: #6b1a2e;
+  --rose: #c4405a;
+  --text-dim: #8a7d6e;
+  --border-gold: rgba(201, 168, 76, 0.15);
+  --font-serif: var(--font-serif, "Playfair Display", Georgia, serif);
+  --font-sans: var(--font-sans, "Inter", system-ui, sans-serif);
+}
+
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--cream);
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+}
+
+/* ── Base ── */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--cream);
+  font-family: var(--font-sans);
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+
+/* ── Selection ── */
+::selection { background: rgba(201, 168, 76, 0.25); color: var(--gold-light); }
+
+/* ── Font Utilities ── */
+.font-serif { font-family: var(--font-serif); }
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to   { background-position: 200% 0; }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes heroZoom {
+  from { transform: scale(1.05); }
+  to   { transform: scale(1.12); }
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.4; transform: scaleY(1); }
+  50%       { opacity: 1; transform: scaleY(1.1); }
+}
+
+.animate-fade-up { animation: fadeUp 0.7s ease both; }
+.animate-fade-in { animation: fadeIn 0.5s ease both; }
+.animate-marquee { animation: marquee 28s linear infinite; }
+.animate-hero-zoom { animation: heroZoom 14s ease-in-out infinite alternate; }
+.animate-scroll-pulse { animation: scrollPulse 2s ease infinite; }
+
+/* ── Delay helpers ── */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+
+/* ── Section ── */
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.section-label::before,
+.section-label::after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--gold-dim);
+}
+
+/* ── Loading skeleton ── */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg2) 25%,
+    var(--bg3) 50%,
+    var(--bg2) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ── Price tag ── */
+.price-tag {
+  font-family: var(--font-serif);
+  color: var(--gold);
+  font-weight: 600;
+}
