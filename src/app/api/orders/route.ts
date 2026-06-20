@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Order from "@/models/Order";
-import { razorpay } from "@/lib/razorpay";
+import { getRazorpay } from "@/lib/razorpay";
+import { isDbConfigured } from "@/lib/env";
 import { ApiResponse, Order as IOrder } from "@/types";
 import { SHIPPING_THRESHOLD, SHIPPING_COST, TAX_RATE } from "@/lib/utils";
 
@@ -17,7 +18,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Calculate totals
     const subtotal: number = items.reduce(
       (sum: number, item: { price: number; quantity: number }) =>
         sum + item.price * item.quantity,
@@ -27,22 +27,46 @@ export async function POST(request: NextRequest) {
     const tax = Math.round(subtotal * TAX_RATE);
     const total = subtotal + shipping + tax;
 
-    await connectDB();
-
-    // Create Razorpay order (will fail gracefully if keys are not set)
     let razorpay_order_id: string | undefined;
-    try {
-      const rzpOrder = await razorpay.orders.create({
-        amount: total * 100, // paise
-        currency: "INR",
-        receipt: `rcpt_${Date.now()}`,
-      });
-      razorpay_order_id = rzpOrder.id;
-    } catch (rzpErr) {
-      console.warn("[Razorpay] Could not create order:", rzpErr);
+    const razorpay = getRazorpay();
+    if (razorpay) {
+      try {
+        const rzpOrder = await razorpay.orders.create({
+          amount: total * 100,
+          currency: "INR",
+          receipt: `rcpt_${Date.now()}`,
+        });
+        razorpay_order_id = rzpOrder.id;
+      } catch (rzpErr) {
+        console.warn("[Razorpay] Could not create order:", rzpErr);
+      }
     }
 
-    // Persist order
+    // Demo mode — no MONGODB_URI: return a fake order (COD flow on checkout)
+    if (!isDbConfigured()) {
+      const demoOrder: IOrder = {
+        _id: `demo_${Date.now()}`,
+        items,
+        subtotal,
+        shipping,
+        tax,
+        total,
+        shippingAddress,
+        razorpay_order_id,
+        status: "pending",
+        createdAt: new Date().toISOString(),
+      };
+
+      return NextResponse.json<
+        ApiResponse<{ order: IOrder; razorpay_order_id?: string; total: number }>
+      >({
+        success: true,
+        data: { order: demoOrder, razorpay_order_id, total },
+      });
+    }
+
+    await connectDB();
+
     const order = await Order.create({
       items,
       subtotal,
@@ -60,7 +84,9 @@ export async function POST(request: NextRequest) {
       createdAt: order.createdAt?.toISOString() ?? new Date().toISOString(),
     };
 
-    return NextResponse.json<ApiResponse<{ order: IOrder; razorpay_order_id?: string; total: number }>>({
+    return NextResponse.json<
+      ApiResponse<{ order: IOrder; razorpay_order_id?: string; total: number }>
+    >({
       success: true,
       data: {
         order: serializedOrder,

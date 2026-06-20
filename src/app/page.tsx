@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Star } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
+import { queryProducts } from "@/lib/products";
 import { Product } from "@/types";
 
 export const metadata: Metadata = {
@@ -13,14 +14,8 @@ export const metadata: Metadata = {
 
 async function getFeaturedProducts(): Promise<Product[]> {
   try {
-    const baseUrl =
-      process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
-    const res = await fetch(`${baseUrl}/api/products?limit=6&featured=true`, {
-      next: { revalidate: 300 },
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data.data?.products ?? [];
+    const { products } = await queryProducts({ limit: 6, featured: true });
+    return products as Product[];
   } catch {
     return [];
   }

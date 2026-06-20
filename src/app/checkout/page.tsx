@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowRight, ArrowLeft, CheckCircle, Loader2 } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import { formatPrice } from "@/lib/utils";
+import { isPublicRazorpayConfigured, env } from "@/lib/env";
 import toast from "react-hot-toast";
 
 const STEPS = ["Cart Review", "Shipping", "Payment"];
@@ -100,11 +101,11 @@ export default function CheckoutPage() {
 
       const { order, razorpay_order_id } = data.data;
 
-      // If Razorpay order created, open payment modal
-      if (razorpay_order_id && process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID) {
+      // Razorpay modal only when NEXT_PUBLIC_RAZORPAY_KEY_ID is set
+      if (razorpay_order_id && isPublicRazorpayConfigured()) {
         openRazorpay(order._id, razorpay_order_id, totalAmt);
       } else {
-        // Fallback: treat as COD
+        // Demo / COD — no payment credentials required
         clearCart();
         router.push(`/order-confirmation?orderId=${order._id}&status=cod`);
       }
@@ -119,7 +120,7 @@ export default function CheckoutPage() {
   const openRazorpay = (orderId: string, rzpOrderId: string, amount: number) => {
     // @ts-expect-error — Razorpay loaded via CDN script
     const rzp = new window.Razorpay({
-      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      key: env.publicRazorpayKeyId,
       amount: amount * 100,
       currency: "INR",
       name: "Taania Kandpal",

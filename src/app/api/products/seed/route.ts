@@ -1,151 +1,21 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Product from "@/models/Product";
-
-const SEED_PRODUCTS = [
-  {
-    name: "Champagne Zardozi Anarkali Set",
-    slug: "champagne-zardozi-anarkali-set",
-    category: "anarkali",
-    description:
-      "A breathtaking champagne gold anarkali suit adorned with intricate zardozi hand embroidery. Perfect for weddings and festive celebrations.",
-    price: 12499,
-    originalPrice: 18999,
-    images: ["/images/anarkali.png"],
-    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
-    colors: [
-      { name: "Champagne Gold", hex: "#e8c96a" },
-      { name: "Ivory", hex: "#f5ede0" },
-    ],
-    fabric: "Pure Georgette with Satin Lining",
-    occasion: ["Wedding", "Sangeet", "Festive"],
-    tags: ["anarkali", "zardozi", "wedding", "gold", "bestseller"],
-    rating: 4.9,
-    reviewCount: 42,
-    stock: 8,
-    isBestseller: true,
-    isNew: true,
-    isBridal: true,
-  },
-  {
-    name: "Pink Rose Bridal Lehenga Choli",
-    slug: "pink-rose-bridal-lehenga-choli",
-    category: "lehenga",
-    description:
-      "A stunning bridal lehenga in blush rose with heavy Rajasthani embroidery, dupatta, and choli set. Every stitch is a testament to artisan mastery.",
-    price: 38500,
-    images: ["/images/lehenga.png"],
-    sizes: ["XS", "S", "M", "L", "XL"],
-    colors: [
-      { name: "Blush Rose", hex: "#f4a0b5" },
-      { name: "Deep Red", hex: "#8b1c3a" },
-    ],
-    fabric: "Pure Silk with Organza Dupatta",
-    occasion: ["Bridal", "Wedding", "Engagement"],
-    tags: ["lehenga", "bridal", "wedding", "pink", "silk"],
-    rating: 5.0,
-    reviewCount: 78,
-    stock: 4,
-    isBestseller: true,
-    isBridal: true,
-  },
-  {
-    name: "Midnight Blue Banarasi Silk Saree",
-    slug: "midnight-blue-banarasi-silk-saree",
-    category: "saree",
-    description:
-      "An exquisite midnight blue Banarasi silk saree with gold zari border and intricate buta work throughout. A timeless heirloom piece.",
-    price: 9800,
-    originalPrice: 13500,
-    images: ["/images/saree.png"],
-    sizes: ["Free Size"],
-    colors: [
-      { name: "Midnight Blue", hex: "#1a2a6c" },
-      { name: "Royal Purple", hex: "#4b0082" },
-    ],
-    fabric: "Pure Banarasi Silk",
-    occasion: ["Wedding", "Festive", "Puja", "Reception"],
-    tags: ["saree", "banarasi", "silk", "blue", "traditional"],
-    rating: 4.7,
-    reviewCount: 31,
-    stock: 15,
-    isNew: true,
-  },
-  {
-    name: "Ivory Lucknowi Chikankari Kurta Set",
-    slug: "ivory-lucknowi-chikankari-kurta-set",
-    category: "kurta",
-    description:
-      "A delicate ivory kurta set featuring authentic Lucknowi chikankari embroidery. Light as a whisper, beautiful as a memory.",
-    price: 4850,
-    originalPrice: 6200,
-    images: ["/images/kurta.png"],
-    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
-    colors: [
-      { name: "Ivory White", hex: "#f5ede0" },
-      { name: "Powder Blue", hex: "#b0c4de" },
-      { name: "Dusty Rose", hex: "#dcb4b4" },
-    ],
-    fabric: "Pure Cotton Muslin",
-    occasion: ["Casual", "Festive", "Office"],
-    tags: ["kurta", "chikankari", "lucknow", "cotton", "everyday"],
-    rating: 4.6,
-    reviewCount: 95,
-    stock: 30,
-    isBestseller: true,
-    isNew: false,
-  },
-  {
-    name: "Emerald Green Silk Anarkali Suit",
-    slug: "emerald-green-silk-anarkali-suit",
-    category: "anarkali",
-    description:
-      "A regal emerald green anarkali crafted from pure silk with hand-sewn mirror work and gota patti embellishments.",
-    price: 15800,
-    originalPrice: 22000,
-    images: ["/images/anarkali.png"],
-    sizes: ["XS", "S", "M", "L", "XL"],
-    colors: [
-      { name: "Emerald Green", hex: "#004c3f" },
-      { name: "Peacock Blue", hex: "#005f73" },
-    ],
-    fabric: "Pure Raw Silk",
-    occasion: ["Wedding", "Reception", "Festive"],
-    tags: ["anarkali", "silk", "green", "mirror-work", "premium"],
-    rating: 4.8,
-    reviewCount: 23,
-    stock: 6,
-    isNew: true,
-  },
-  {
-    name: "Crimson Kanjivaram Silk Saree",
-    slug: "crimson-kanjivaram-silk-saree",
-    category: "saree",
-    description:
-      "A magnificent crimson Kanjivaram silk saree with a gold temple border and richly woven pallav. A bridal heirloom.",
-    price: 18900,
-    images: ["/images/saree.png"],
-    sizes: ["Free Size"],
-    colors: [
-      { name: "Crimson Red", hex: "#dc143c" },
-      { name: "Royal Blue", hex: "#4169e1" },
-    ],
-    fabric: "Pure Kanjivaram Silk",
-    occasion: ["Bridal", "Wedding", "Temple", "Festival"],
-    tags: ["saree", "kanjivaram", "silk", "red", "bridal", "south-indian"],
-    rating: 4.9,
-    reviewCount: 56,
-    stock: 7,
-    isBestseller: true,
-    isBridal: true,
-  },
-];
+import { isDbConfigured } from "@/lib/env";
+import { MOCK_PRODUCTS } from "@/lib/mock-data";
 
 export async function GET() {
+  if (!isDbConfigured()) {
+    return NextResponse.json({
+      success: false,
+      error:
+        "MONGODB_URI is not configured. Products are served from mock data; seeding requires a database.",
+    });
+  }
+
   try {
     await connectDB();
 
-    // Only seed if empty
     const count = await Product.countDocuments();
     if (count > 0) {
       return NextResponse.json({
@@ -154,11 +24,11 @@ export async function GET() {
       });
     }
 
-    await Product.insertMany(SEED_PRODUCTS);
+    await Product.insertMany(MOCK_PRODUCTS);
 
     return NextResponse.json({
       success: true,
-      message: `Seeded ${SEED_PRODUCTS.length} products successfully.`,
+      message: `Seeded ${MOCK_PRODUCTS.length} products successfully.`,
     });
   } catch (error) {
     console.error("[API /products/seed]", error);

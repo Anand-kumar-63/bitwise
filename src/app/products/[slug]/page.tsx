@@ -2,19 +2,13 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Image from "next/image";
 import ProductDetailClient from "./ProductDetailClient";
+import { getProductBySlug } from "@/lib/products";
 import { Product } from "@/types";
 import { formatPrice } from "@/lib/utils";
 
 async function getProduct(slug: string): Promise<Product | null> {
   try {
-    const baseUrl =
-      process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
-    const res = await fetch(`${baseUrl}/api/products/${slug}`, {
-      next: { revalidate: 300 },
-    });
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data.data ?? null;
+    return await getProductBySlug(slug);
   } catch {
     return null;
   }

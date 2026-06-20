@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import connectDB from "@/lib/mongodb";
 import Order from "@/models/Order";
+import { env, isDbConfigured } from "@/lib/env";
 import { ApiResponse } from "@/types";
 
 export async function POST(request: NextRequest) {
@@ -21,8 +22,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify HMAC signature
-    const key_secret = process.env.RAZORPAY_KEY_SECRET ?? "";
+    // Demo orders (no database) — accept verification without persisting
+    if (!isDbConfigured() || String(orderId).startsWith("demo_")) {
+      return NextResponse.json<ApiResponse<{ orderId: string }>>({
+        success: true,
+        data: { orderId: String(orderId) },
+      });
+    }
+
+    const key_secret = env.razorpayKeySecret;
     const expectedSignature = crypto
       .createHmac("sha256", key_secret)
       .update(`${razorpay_order_id}|${razorpay_payment_id}`)
@@ -37,7 +45,6 @@ export async function POST(request: NextRequest) {
 
     await connectDB();
 
-    // Update order status
     const order = await Order.findByIdAndUpdate(
       orderId,
       {
