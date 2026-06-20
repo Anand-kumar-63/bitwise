@@ -50,6 +50,7 @@ export default function Navbar() {
     { href: "/shop?category=anarkali", label: "Anarkali" },
     { href: "/shop?category=saree", label: "Sarees" },
     { href: "/shop?category=kurta", label: "Kurtas" },
+    { href: "/contact", label: "Contact" },
   ];
 
   return (

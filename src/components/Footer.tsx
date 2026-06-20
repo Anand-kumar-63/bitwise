@@ -16,7 +16,7 @@ export default function Footer() {
     { label: "Returns & Exchanges", href: "#" },
     { label: "Track Your Order", href: "#" },
     { label: "Shipping Policy", href: "#" },
-    { label: "Contact Us", href: "#" },
+    { label: "Contact Us", href: "/contact" },
   ];
 
   const company = [
@@ -52,7 +52,7 @@ export default function Footer() {
                 6393408658
               </a>
               <a
-                href="mailto:azbafashion5@gmail.com"
+                href="#"
                 className="flex items-center gap-2 text-[#b8a898] text-sm hover:text-[#c9a84c] transition-colors group"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#c9a84c]">
