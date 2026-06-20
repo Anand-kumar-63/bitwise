@@ -16,8 +16,8 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Taania Kandpal — Luxury Indian Ethnic Wear",
-    template: "%s | Taania Kandpal",
+    default: "Azba Fashion — Luxury Indian Ethnic Wear",
+    template: "%s | Azba Fashion",
   },
   description:
     "Discover exquisite handcrafted Indian ethnic wear — lehengas, anarkalis, sarees, and kurtas crafted with centuries-old artisan precision.",
@@ -29,12 +29,12 @@ export const metadata: Metadata = {
     "Banarasi saree",
     "designer kurta",
     "handcrafted ethnic wear",
-    "Taania Kandpal",
+    "Azba Fashion",
   ],
   openGraph: {
     type: "website",
     locale: "en_IN",
-    siteName: "Taania Kandpal",
+    siteName: "Azba Fashion",
   },
 };
 
@@ -48,7 +48,7 @@ export default function RootLayout({
       lang="en"
       className={`${playfair.variable} ${inter.variable} scroll-smooth`}
     >
-      <body className="min-h-screen flex flex-col bg-[#0a0806] text-[#f0e8dc] antialiased">
+      <body className="min-h-screen flex flex-col bg-[#0a0806] text-[#f0e8dc] antialiased dark:bg-[#0a0806] dark:text-[#f0e8dc] light:bg-[#f8f4ef] light:text-[#1a1410]">
         {children}
       </body>
     </html>

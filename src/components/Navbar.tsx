@@ -2,14 +2,41 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ShoppingBag, Heart, Search, Menu, X } from "lucide-react";
+import { ShoppingBag, Heart, Search, Menu, X, Sun, Moon } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
   const { itemCount, toggleCart } = useCartStore();
   const count = itemCount();
+
+  // Init theme from localStorage / system preference
+  useEffect(() => {
+    const saved = localStorage.getItem("theme") as "dark" | "light" | null;
+    const preferred = saved ?? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    applyTheme(preferred);
+    setTheme(preferred);
+  }, []);
+
+  function applyTheme(t: "dark" | "light") {
+    const root = document.documentElement;
+    if (t === "light") {
+      root.classList.add("light-mode");
+      root.classList.remove("dark-mode");
+    } else {
+      root.classList.add("dark-mode");
+      root.classList.remove("light-mode");
+    }
+    localStorage.setItem("theme", t);
+  }
+
+  function toggleTheme() {
+    const next = theme === "dark" ? "light" : "dark";
+    applyTheme(next);
+    setTheme(next);
+  }
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 60);
@@ -30,17 +57,17 @@ export default function Navbar() {
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled
-            ? "bg-[#0a0806]/95 backdrop-blur-xl border-b border-[#c9a84c]/15 py-3"
-            : "bg-[#0a0806]/60 backdrop-blur-md border-b border-white/5 py-5"
+            ? "nav-scrolled py-3"
+            : "nav-top py-5"
         }`}
       >
         <div className="max-w-[1320px] mx-auto px-6 flex items-center justify-between gap-6">
           {/* Logo */}
           <Link href="/" className="flex flex-col leading-tight group">
             <span className="font-serif text-[1.35rem] font-semibold text-[#c9a84c] tracking-wide group-hover:text-[#e8c96a] transition-colors">
-              Taania Kandpal
+              Azba Fashion
             </span>
-            <span className="text-[0.55rem] tracking-[0.25em] uppercase text-[#8a7d6e]">
+            <span className="text-[0.55rem] tracking-[0.25em] uppercase nav-subtitle">
               Luxury Indian Couture
             </span>
           </Link>
@@ -51,7 +78,7 @@ export default function Navbar() {
               <li key={l.href}>
                 <Link
                   href={l.href}
-                  className="text-[0.75rem] font-medium tracking-[0.12em] uppercase text-[#b8a898] hover:text-[#c9a84c] transition-colors relative group"
+                  className="text-[0.75rem] font-medium tracking-[0.12em] uppercase nav-link transition-colors relative group"
                 >
                   {l.label}
                   <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-[#c9a84c] group-hover:w-full transition-all duration-300" />
@@ -64,15 +91,26 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             <button
               aria-label="Search"
-              className="hidden sm:flex w-9 h-9 items-center justify-center text-[#8a7d6e] hover:text-[#c9a84c] transition-colors"
+              className="hidden sm:flex w-9 h-9 items-center justify-center nav-icon transition-colors"
             >
               <Search size={18} />
             </button>
             <button
               aria-label="Wishlist"
-              className="hidden sm:flex w-9 h-9 items-center justify-center text-[#8a7d6e] hover:text-[#c9a84c] transition-colors"
+              className="hidden sm:flex w-9 h-9 items-center justify-center nav-icon transition-colors"
             >
               <Heart size={18} />
+            </button>
+
+            {/* Theme Toggle */}
+            <button
+              id="theme-toggle"
+              aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+              onClick={toggleTheme}
+              className="w-9 h-9 flex items-center justify-center nav-icon hover:text-[#c9a84c] transition-colors"
+              title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            >
+              {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
             </button>
 
             {/* Cart */}
@@ -80,7 +118,7 @@ export default function Navbar() {
               id="cart-button"
               aria-label={`Cart (${count} items)`}
               onClick={toggleCart}
-              className="relative w-9 h-9 flex items-center justify-center text-[#8a7d6e] hover:text-[#c9a84c] transition-colors"
+              className="relative w-9 h-9 flex items-center justify-center nav-icon hover:text-[#c9a84c] transition-colors"
             >
               <ShoppingBag size={19} />
               {count > 0 && (
@@ -100,7 +138,7 @@ export default function Navbar() {
             {/* Hamburger */}
             <button
               aria-label="Menu"
-              className="lg:hidden w-9 h-9 flex items-center justify-center text-[#b8a898] hover:text-[#c9a84c]"
+              className="lg:hidden w-9 h-9 flex items-center justify-center nav-link hover:text-[#c9a84c]"
               onClick={() => setMobileOpen((v) => !v)}
             >
               {mobileOpen ? <X size={20} /> : <Menu size={20} />}
@@ -110,13 +148,13 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {mobileOpen && (
-          <div className="lg:hidden absolute top-full left-0 right-0 bg-[#0a0806]/98 backdrop-blur-xl border-b border-[#c9a84c]/15 py-6 px-6 flex flex-col gap-4">
+          <div className="lg:hidden absolute top-full left-0 right-0 mobile-menu backdrop-blur-xl border-b border-[#c9a84c]/15 py-6 px-6 flex flex-col gap-4">
             {navLinks.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
                 onClick={() => setMobileOpen(false)}
-                className="text-[0.82rem] font-medium tracking-[0.12em] uppercase text-[#b8a898] hover:text-[#c9a84c] transition-colors py-1"
+                className="text-[0.82rem] font-medium tracking-[0.12em] uppercase nav-link hover:text-[#c9a84c] transition-colors py-1"
               >
                 {l.label}
               </Link>

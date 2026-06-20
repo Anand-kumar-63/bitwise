@@ -16,6 +16,33 @@
   --border-gold: rgba(201, 168, 76, 0.15);
   --font-serif: var(--font-serif, "Playfair Display", Georgia, serif);
   --font-sans: var(--font-sans, "Inter", system-ui, sans-serif);
+  /* nav helpers */
+  --nav-bg-top: rgba(10,8,6,0.60);
+  --nav-bg-scrolled: rgba(10,8,6,0.95);
+  --nav-text: #b8a898;
+  --nav-subtitle: #8a7d6e;
+  --mobile-menu-bg: rgba(10,8,6,0.98);
+}
+
+/* ── Light Mode ── */
+html.light-mode {
+  --bg: #f8f4ef;
+  --bg2: #f0ebe3;
+  --bg3: #e8e0d5;
+  --cream: #1a1410;
+  --cream-dim: #4a3f35;
+  --text-dim: #6b5e50;
+  --border-gold: rgba(139, 94, 30, 0.20);
+  --nav-bg-top: rgba(248,244,239,0.80);
+  --nav-bg-scrolled: rgba(248,244,239,0.97);
+  --nav-text: #4a3f35;
+  --nav-subtitle: #8a7060;
+  --mobile-menu-bg: rgba(248,244,239,0.99);
+}
+
+html.light-mode body {
+  background: var(--bg);
+  color: var(--cream);
 }
 
 @theme inline {
@@ -34,7 +61,27 @@ body {
   background: var(--bg);
   color: var(--cream);
   font-family: var(--font-sans);
+  transition: background 0.35s ease, color 0.35s ease;
 }
+
+/* ── Nav theme helpers ── */
+.nav-scrolled {
+  background: var(--nav-bg-scrolled);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border-bottom: 1px solid var(--border-gold);
+}
+.nav-top {
+  background: var(--nav-bg-top);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.nav-link  { color: var(--nav-text); }
+.nav-link:hover { color: var(--gold); }
+.nav-icon  { color: var(--nav-text); }
+.nav-subtitle { color: var(--nav-subtitle); }
+.mobile-menu { background: var(--mobile-menu-bg); }
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 4px; }

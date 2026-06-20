@@ -35,11 +35,33 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <Link href="/" className="block font-serif text-[1.55rem] text-[#c9a84c] mb-4 hover:text-[#e8c96a] transition-colors">
-              Taania Kandpal
+              Azba Fashion
             </Link>
-            <p className="text-[#8a7d6e] text-sm leading-relaxed mb-6 max-w-xs">
+            <p className="text-[#8a7d6e] text-sm leading-relaxed mb-4 max-w-xs">
               Luxury Indian ethnic wear crafted for the discerning woman. Each piece is a celebration of heritage, artistry, and timeless elegance.
             </p>
+            {/* Contact Info */}
+            <div className="mb-5 space-y-2">
+              <a
+                href="tel:6393408658"
+                className="flex items-center gap-2 text-[#b8a898] text-sm hover:text-[#c9a84c] transition-colors group"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#c9a84c]">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.63 3.35 2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.78a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.18z"/>
+                </svg>
+                6393408658
+              </a>
+              <a
+                href="mailto:azbafashion5@gmail.com"
+                className="flex items-center gap-2 text-[#b8a898] text-sm hover:text-[#c9a84c] transition-colors group"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#c9a84c]">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+                azbafashion5@gmail.com
+              </a>
+            </div>
             <div className="flex gap-3">
               <a
                 href="https://instagram.com/taaniakandpal"
@@ -132,7 +154,7 @@ export default function Footer() {
         {/* Bottom */}
         <div className="border-t border-[#c9a84c]/12 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-[#6b6258] text-xs">
-            © {new Date().getFullYear()} Taania Kandpal. All rights reserved. Crafted with ♡ in India.
+            © {new Date().getFullYear()} Azba Fashion. All rights reserved. Crafted with ♡ in India.
           </p>
           <div className="flex items-center gap-2">
             {["Razorpay", "UPI", "Visa", "Mastercard", "COD"].map((p) => (
