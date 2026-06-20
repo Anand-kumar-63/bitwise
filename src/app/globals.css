@@ -24,27 +24,121 @@
   --mobile-menu-bg: rgba(10,8,6,0.98);
 }
 
-/* ── Light Mode ── */
+/* ─────────────────────────────────────────────────
+   LIGHT MODE — token overrides
+   ───────────────────────────────────────────────── */
 html.light-mode {
-  --bg: #f8f4ef;
-  --bg2: #f0ebe3;
-  --bg3: #e8e0d5;
+  --bg: #f7f3ee;
+  --bg2: #ede8e1;
+  --bg3: #e2dbd2;
   --cream: #1a1410;
   --cream-dim: #4a3f35;
   --text-dim: #6b5e50;
-  --border-gold: rgba(139, 94, 30, 0.20);
-  --nav-bg-top: rgba(248,244,239,0.80);
-  --nav-bg-scrolled: rgba(248,244,239,0.97);
+  --border-gold: rgba(139, 94, 30, 0.22);
+  --nav-bg-top: rgba(247,243,238,0.88);
+  --nav-bg-scrolled: rgba(247,243,238,0.97);
   --nav-text: #4a3f35;
   --nav-subtitle: #8a7060;
-  --mobile-menu-bg: rgba(248,244,239,0.99);
+  --mobile-menu-bg: rgba(247,243,238,0.99);
 }
 
+/* ─────────────────────────────────────────────────
+   LIGHT MODE — override every hardcoded dark color
+   The selectors use [class*="…"] to match Tailwind
+   arbitrary-value classes like bg-[#0a0806] regardless
+   of any modifiers appended to the class string.
+   ───────────────────────────────────────────────── */
+
+/* body */
 html.light-mode body {
-  background: var(--bg);
-  color: var(--cream);
+  background-color: var(--bg) !important;
+  color: var(--cream) !important;
 }
 
+/* ── Backgrounds ─────────────────────────────── */
+html.light-mode [class*="bg-[#0a0806]"] { background-color: var(--bg)  !important; }
+html.light-mode [class*="bg-[#0d0a07]"] { background-color: var(--bg)  !important; }
+html.light-mode [class*="bg-[#080604]"] { background-color: var(--bg)  !important; }
+html.light-mode [class*="bg-[#110e0a]"] { background-color: var(--bg2) !important; }
+html.light-mode [class*="bg-[#1a1410]"] { background-color: var(--bg3) !important; }
+
+/* footer */
+html.light-mode footer { background-color: var(--bg2) !important; }
+
+/* aside (cart drawer) */
+html.light-mode aside  { background-color: var(--bg)  !important; }
+
+/* product cards */
+html.light-mode article { background-color: var(--bg2) !important; }
+
+/* ── Text ─────────────────────────────────────── */
+html.light-mode [class*="text-[#f0e8dc]"] { color: var(--cream)     !important; }
+html.light-mode [class*="text-[#b8a898]"] { color: var(--cream-dim) !important; }
+html.light-mode [class*="text-[#8a7d6e]"] { color: var(--text-dim)  !important; }
+html.light-mode [class*="text-[#6b6258]"] { color: #8a7060          !important; }
+
+/* ── Borders ──────────────────────────────────── */
+html.light-mode [class*="border-[#c9a84c]"] {
+  border-color: rgba(139,94,30,0.28) !important;
+}
+html.light-mode [class*="outline-[#110e0a]"] {
+  outline-color: var(--bg2) !important;
+}
+
+/* ── Hero gradient — soften dark overlay ─────── */
+html.light-mode [class*="from-[#0a0806]"] {
+  --tw-gradient-from: rgba(247,243,238,0.55) var(--tw-gradient-from-position) !important;
+}
+html.light-mode [class*="bg-[#0a0806]/70"],
+html.light-mode [class*="bg-[#0a0806]/80"],
+html.light-mode [class*="bg-[#0a0806]/95"],
+html.light-mode [class*="bg-[#0a0806]/60"] {
+  background-color: rgba(247,243,238,0.50) !important;
+}
+
+/* ── Select / inputs ─────────────────────────── */
+html.light-mode select,
+html.light-mode input[type="email"],
+html.light-mode input[type="text"] {
+  background-color: var(--bg2) !important;
+  color: var(--cream)          !important;
+}
+
+/* ── Process step circles ────────────────────── */
+html.light-mode [class*="bg-[#0d0a07]"][class*="rounded-full"] {
+  background-color: var(--bg2) !important;
+}
+
+/* ── Testimonial cards ───────────────────────── */
+html.light-mode [class*="bg-[#110e0a]"][class*="border"] {
+  background-color: var(--bg2) !important;
+}
+
+/* ── Offers banner card ──────────────────────── */
+html.light-mode [class*="bg-[#0a0806]/60"] {
+  background-color: rgba(237,232,225,0.80) !important;
+}
+
+/* ── Scrollbar ───────────────────────────────── */
+html.light-mode ::-webkit-scrollbar-track { background: var(--bg2); }
+
+/* ── Smooth transitions for everything ───────── */
+html.light-mode *,
+html:not(.light-mode) * {
+  transition-property: background-color, color, border-color, outline-color, fill, stroke;
+  transition-duration: 0.30s;
+  transition-timing-function: ease;
+}
+
+/* ── Exclude images / transforms from transition  */
+html.light-mode img, html.light-mode video,
+html:not(.light-mode) img, html:not(.light-mode) video {
+  transition: none;
+}
+
+/* ─────────────────────────────────────────────────
+   Tailwind theme bridge
+   ───────────────────────────────────────────────── */
 @theme inline {
   --color-background: var(--bg);
   --color-foreground: var(--cream);
@@ -53,9 +147,7 @@ html.light-mode body {
 }
 
 /* ── Base ── */
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   background: var(--bg);
@@ -77,14 +169,14 @@ body {
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
-.nav-link  { color: var(--nav-text); }
+.nav-link       { color: var(--nav-text); }
 .nav-link:hover { color: var(--gold); }
-.nav-icon  { color: var(--nav-text); }
-.nav-subtitle { color: var(--nav-subtitle); }
-.mobile-menu { background: var(--mobile-menu-bg); }
+.nav-icon       { color: var(--nav-text); }
+.nav-subtitle   { color: var(--nav-subtitle); }
+.mobile-menu    { background: var(--mobile-menu-bg); }
 
 /* ── Scrollbar ── */
-::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar       { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
 
@@ -117,14 +209,14 @@ body {
 }
 @keyframes scrollPulse {
   0%, 100% { opacity: 0.4; transform: scaleY(1); }
-  50%       { opacity: 1; transform: scaleY(1.1); }
+  50%       { opacity: 1;   transform: scaleY(1.1); }
 }
 
-.animate-fade-up { animation: fadeUp 0.7s ease both; }
-.animate-fade-in { animation: fadeIn 0.5s ease both; }
-.animate-marquee { animation: marquee 28s linear infinite; }
-.animate-hero-zoom { animation: heroZoom 14s ease-in-out infinite alternate; }
-.animate-scroll-pulse { animation: scrollPulse 2s ease infinite; }
+.animate-fade-up       { animation: fadeUp       0.7s ease both; }
+.animate-fade-in       { animation: fadeIn        0.5s ease both; }
+.animate-marquee       { animation: marquee       28s linear infinite; }
+.animate-hero-zoom     { animation: heroZoom      14s ease-in-out infinite alternate; }
+.animate-scroll-pulse  { animation: scrollPulse   2s ease infinite; }
 
 /* ── Delay helpers ── */
 .delay-100 { animation-delay: 0.1s; }
@@ -133,7 +225,7 @@ body {
 .delay-400 { animation-delay: 0.4s; }
 .delay-500 { animation-delay: 0.5s; }
 
-/* ── Section ── */
+/* ── Section label ── */
 .section-label {
   display: inline-flex;
   align-items: center;
