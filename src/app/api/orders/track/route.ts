@@ -82,7 +82,7 @@ export async function GET(request: NextRequest) {
     }
 
     const serialized: IOrder = {
-      ...(order as Record<string, unknown>),
+      // ...(order as Record<string, unknown>),
       _id: (order as { _id: { toString(): string } })._id.toString(),
       createdAt:
         (order as { createdAt?: Date }).createdAt?.toISOString() ??
