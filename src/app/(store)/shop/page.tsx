@@ -50,6 +50,16 @@ function ShopContent() {
     sort: "newest",
   });
 
+  // ── Sync URL → state whenever the navbar (or back/forward) changes the URL ──
+  useEffect(() => {
+    setFilters((prev) => ({
+      ...prev,
+      category: searchParams.get("category") ?? "",
+      bridal:   searchParams.get("bridal") === "true",
+      sale:     searchParams.get("sale")   === "true",
+    }));
+  }, [searchParams]);
+
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     const params = new URLSearchParams();
@@ -88,6 +98,8 @@ function ShopContent() {
     fetchProducts();
   }, [fetchProducts]);
 
+  // Only push URL updates when the user changes filters ON the page (not when
+  // we are already reacting to a URL change — avoids an infinite loop).
   useEffect(() => {
     const params = new URLSearchParams();
     if (filters.category) params.set("category", filters.category);
@@ -96,6 +108,7 @@ function ShopContent() {
     router.replace(`/shop?${params}`, { scroll: false });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters.category, filters.bridal, filters.sale]);
+
 
   const activeFilters = [
     filters.category && CATEGORIES.find((c) => c.value === filters.category)?.label,
